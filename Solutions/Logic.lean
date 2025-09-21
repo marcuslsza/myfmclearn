@@ -11,21 +11,35 @@ theorem doubleneg_intro :
     P → ¬ ¬ P  := by
   intro hp
   intro hNotP
-  apply hNotP
-  assumption
+  contradiction
 
 
 theorem doubleneg_elim :
     ¬ ¬ P → P  := by
   intro hNotNotP
   by_cases hLem: P
-  rcases
+  case pos =>
+    assumption
+  case neg =>
+    have hBoom : False := hNotNotP hLem
+    contradiction
 
 
 theorem doubleneg_law :
     ¬ ¬ P ↔ P  := by
-  sorry
-
+  constructor
+  case mp =>
+    intro hNotNotP
+    by_cases hLem: P
+    case pos =>
+      assumption
+    case neg =>
+      have hBoom : False := hNotNotP hLem
+      contradiction
+  case mpr =>
+    intro hp
+    intro hnotP
+    contradiction
 
 ------------------------------------------------
 -- Commutativity of ∨,∧
@@ -33,11 +47,24 @@ theorem doubleneg_law :
 
 theorem disj_comm :
     (P ∨ Q) → (Q ∨ P)  := by
-  sorry
+  intro hpvq
+  rcases hpvq with (hp | hq)
+  case inl =>
+    right
+    assumption
+  case inr =>
+    left
+    assumption
 
 theorem conj_comm :
     (P ∧ Q) → (Q ∧ P)  := by
-  sorry
+  intro hpq
+  rcases hpq with ⟨hp , hq⟩
+  constructor
+  case intro.left =>
+    assumption
+  case intro.right =>
+    assumption
 
 
 ------------------------------------------------
