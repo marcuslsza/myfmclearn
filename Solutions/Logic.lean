@@ -11,12 +11,16 @@ theorem doubleneg_intro :
     P → ¬ ¬ P  := by
   intro hp
   intro hNotP
-
+  apply hNotP
+  assumption
 
 
 theorem doubleneg_elim :
     ¬ ¬ P → P  := by
-  sorry
+  intro hNotNotP
+  by_cases hLem: P
+  rcases
+
 
 theorem doubleneg_law :
     ¬ ¬ P ↔ P  := by
