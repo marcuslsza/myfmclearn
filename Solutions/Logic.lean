@@ -73,12 +73,28 @@ theorem conj_comm :
 
 theorem impl_as_disj_converse :
     (¬ P ∨ Q) → (P → Q)  := by
-  sorry
+  intro h
+  intro hp
+  rcases h with (hNP | hQ)
+  case inl =>
+    have hboom : False := hNP hp
+    contradiction
+  case inr =>
+    assumption
+
+
+
 
 theorem disj_as_impl :
     (P ∨ Q) → (¬ P → Q)  := by
-  sorry
-
+  intro hpvq
+  intro hnp
+  rcases hpvq with (hp | hq)
+  case inl =>
+    have hboom : False := hnp hp
+    contradiction
+  case inr =>
+    assumption
 
 ------------------------------------------------
 -- Contrapositive
@@ -86,11 +102,27 @@ theorem disj_as_impl :
 
 theorem impl_as_contrapositive :
     (P → Q) → (¬ Q → ¬ P)  := by
-  sorry
+  intro hpq
+  intro hnq
+  intro hp
+  have hq : Q := hpq hp
+  have hboom : False := hnq hq
+  assumption
+
+
 
 theorem impl_as_contrapositive_converse :
     (¬ Q → ¬ P) → (P → Q)  := by
-  sorry
+  intro hnqnp
+  intro hp
+  by_cases hq : Q
+  case pos =>
+    assumption
+  case neg =>
+    have hnp : Not P := hnqnp hq
+    contradiction
+
+
 
 theorem contrapositive_law :
     (P → Q) ↔ (¬ Q → ¬ P)  := by
