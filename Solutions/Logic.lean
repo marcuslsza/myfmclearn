@@ -217,7 +217,7 @@ theorem conj_as_negdisj :
     contradiction
   case inr =>
     contradiction
-  ----- commit novo teste
+
 
 
 ------------------------------------------------
