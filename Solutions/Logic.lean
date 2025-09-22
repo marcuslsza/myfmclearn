@@ -126,7 +126,25 @@ theorem impl_as_contrapositive_converse :
 
 theorem contrapositive_law :
     (P → Q) ↔ (¬ Q → ¬ P)  := by
-  sorry
+  constructor
+
+  case mp =>
+    intro hpq
+    intro hnq
+    intro hp
+    have hq : Q := hpq hp
+    have hboom : False := hnq hq
+    assumption
+
+  case mpr =>
+    intro hnqnp
+    intro hp
+    by_cases hq : Q
+    case pos =>
+      assumption
+    case neg =>
+      have hnp : Not P := hnqnp hq
+      contradiction
 
 
 ------------------------------------------------
@@ -135,6 +153,7 @@ theorem contrapositive_law :
 
 theorem lem_irrefutable :
     ¬ ¬ (P ∨ ¬ P)  := by
+  intro h
   sorry
 
 
@@ -144,7 +163,13 @@ theorem lem_irrefutable :
 
 theorem peirce_law_weak :
     ((P → Q) → P) → ¬ ¬ P  := by
+  intro hpq
+  intro hnp
   sorry
+
+
+
+
 
 
 ------------------------------------------------
@@ -153,7 +178,17 @@ theorem peirce_law_weak :
 
 theorem impl_linear :
     (P → Q) ∨ (Q → P)  := by
-  sorry
+  by_cases hlem : Q
+  case pos =>
+    left
+    intro hq
+    assumption
+  case neg =>
+    right
+    intro hq
+    contradiction
+
+
 
 
 ------------------------------------------------
@@ -162,11 +197,27 @@ theorem impl_linear :
 
 theorem disj_as_negconj :
     P ∨ Q → ¬ (¬ P ∧ ¬ Q)  := by
-  sorry
+  intro hpvq
+  intro hnpnq
+  rcases hnpnq with ⟨hnp,hnq⟩
+  rcases hpvq with (hp | hq)
+  case inl =>
+    contradiction
+  case inr =>
+    contradiction
+
 
 theorem conj_as_negdisj :
     P ∧ Q → ¬ (¬ P ∨ ¬ Q)  := by
-  sorry
+  intro hpq
+  intro hnpnq
+  rcases hpq with ⟨hp,hq⟩
+  rcases hnpnq with (hnp | hnq)
+  case inl =>
+    contradiction
+  case inr =>
+    contradiction
+
 
 
 ------------------------------------------------
