@@ -165,7 +165,6 @@ theorem peirce_law_weak :
     ((P → Q) → P) → ¬ ¬ P  := by
   intro hpq
   intro hnp
-  sorry
 
 
 
@@ -226,15 +225,30 @@ theorem conj_as_negdisj :
 
 theorem demorgan_disj :
     ¬ (P ∨ Q) → (¬ P ∧ ¬ Q)  := by
-  sorry
+  intro hnpvq
+  constructor
+  case left =>
+    intro hp
+    sorry
+
+
 
 theorem demorgan_disj_converse :
     (¬ P ∧ ¬ Q) → ¬ (P ∨ Q)  := by
-  sorry
+  intro hnpnq
+  intro hpvq
+  rcases hnpnq with ⟨hnp, hnq⟩
+  rcases hpvq with (hp | hq)
+  case intro.inl =>
+    contradiction
+  case intro.inr =>
+    contradiction
 
 theorem demorgan_conj :
     ¬ (P ∧ Q) → (¬ Q ∨ ¬ P)  := by
-  sorry
+  intro hnpq
+  left
+
 
 theorem demorgan_conj_converse :
     (¬ Q ∨ ¬ P) → ¬ (P ∧ Q)  := by
@@ -298,19 +312,29 @@ theorem impl_refl :
 
 theorem weaken_disj_right :
     P → (P ∨ Q)  := by
-  sorry
+  intro hp
+  left
+  assumption
 
 theorem weaken_disj_left :
     Q → (P ∨ Q)  := by
-  sorry
+  intro hq
+  right
+  assumption
 
 theorem weaken_conj_right :
     (P ∧ Q) → P  := by
-  sorry
+  intro hpq
+  rcases hpq with ⟨hp, hq⟩
+  case intro =>
+    assumption
 
 theorem weaken_conj_left :
     (P ∧ Q) → Q  := by
-  sorry
+  intro hpq
+  rcases hpq with ⟨hp,hq⟩
+  case intro =>
+    assumption
 
 
 ------------------------------------------------
@@ -319,7 +343,18 @@ theorem weaken_conj_left :
 
 theorem disj_idem :
     (P ∨ P) ↔ P  := by
-  sorry
+  constructor
+  case mp =>
+    intro hpvp
+    rcases hpvp with (hp | hp)
+    case inl =>
+      assumption
+    case inr =>
+      assumption
+  case mpr =>
+    intro hp
+    left
+    assumption
 
 theorem conj_idem :
     (P ∧ P) ↔ P := by
@@ -332,12 +367,12 @@ theorem conj_idem :
 
 theorem false_bottom :
     False → P := by
-  sorry
+  intro hboom
+  contradiction
 
 theorem true_top :
     P → True  := by
-  sorry
-
+  intro hp
 
 end propositional
 
@@ -384,7 +419,11 @@ theorem demorgan_exists_law :
 
 theorem exists_as_neg_forall :
     (∃ x, P x) → ¬ (∀ x, ¬ P x)  := by
-  sorry
+  intro h
+  intro hnot
+  obtain ⟨x, hpx⟩ := h
+  have hnpx := hnot x
+  contradiction
 
 theorem forall_as_neg_exists :
     (∀ x, P x) → ¬ (∃ x, ¬ P x)  := by
