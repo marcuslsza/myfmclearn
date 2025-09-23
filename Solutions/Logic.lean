@@ -259,11 +259,27 @@ theorem demorgan_disj_converse :
 theorem demorgan_conj :
     ¬ (P ∧ Q) → (¬ Q ∨ ¬ P)  := by
   intro hnpq
-  right
-  intro hp
-  apply hnpq
-  constructor
-  sorry
+  by_cases hLemP : P
+  case neg =>
+    right
+    assumption
+  case pos =>
+    by_cases hLemQ : Q
+    case neg =>
+      left
+      assumption
+    case pos =>
+      have hpq : (P ∧ Q) := by
+        constructor
+        case left =>
+          assumption
+        case right =>
+          assumption
+      have hboom : False := hnpq hpq
+      contradiction
+
+
+
 
 
 theorem demorgan_conj_converse :
@@ -290,12 +306,51 @@ theorem demorgan_conj_law :
     case intro.inr =>
       contradiction
   case mp =>
-    sorry
+    intro hnpq
+    by_cases hLemP : P
+    case neg =>
+      right
+      assumption
+    case pos =>
+      by_cases hLemQ : Q
+      case neg =>
+        left
+        assumption
+      case pos =>
+      have hpq : (P ∧ Q) := by
+        constructor
+        case left =>
+          assumption
+        case right =>
+          assumption
+      have hboom : False := hnpq hpq
+      contradiction
 
 theorem demorgan_disj_law :
     ¬ (P ∨ Q) ↔ (¬ P ∧ ¬ Q)  := by
-  sorry
-
+  constructor
+  case mp =>
+    intro hnpvq
+    constructor
+    case left =>
+      intro hp
+      apply hnpvq
+      left
+      assumption
+    case right =>
+      intro hq
+      apply hnpvq
+      right
+      assumption
+  case mpr =>
+  intro hnpnq
+  intro hpvq
+  rcases hnpnq with ⟨hnp, hnq⟩
+  rcases hpvq with (hp | hq)
+  case intro.inl =>
+    contradiction
+  case intro.inr =>
+    contradiction
 
 ------------------------------------------------
 -- Distributivity laws between ∨,∧
@@ -303,20 +358,95 @@ theorem demorgan_disj_law :
 
 theorem distr_conj_disj :
     P ∧ (Q ∨ R) → (P ∧ Q) ∨ (P ∧ R)  := by
-  sorry
+  intro h
+  rcases h with ⟨hp, hqvr⟩
+  rcases hqvr with (hq | hr)
+  constructor
+  case intro.inl.h =>
+    constructor
+    case left =>
+      assumption
+    case right =>
+      assumption
+  case intro.inr =>
+    right
+    constructor
+    case h.left =>
+      assumption
+    case h.right =>
+      assumption
+
 
 theorem distr_conj_disj_converse :
     (P ∧ Q) ∨ (P ∧ R) → P ∧ (Q ∨ R)  := by
-  sorry
+  intro h
+  rcases h with (hl | hr)
+  case inl =>
+    rcases hl with ⟨hp, hq⟩
+    constructor
+    case intro.left =>
+      assumption
+    case intro.right =>
+      left
+      assumption
+  case inr =>
+    rcases hr with ⟨hp, hr⟩
+    constructor
+    case intro.left =>
+      assumption
+    case intro.right =>
+      right
+      assumption
+
+
 
 theorem distr_disj_conj :
     P ∨ (Q ∧ R) → (P ∨ Q) ∧ (P ∨ R)  := by
-  sorry
+  intro h
+  rcases h with (hp | hqr)
+  case inl =>
+    constructor
+    case left =>
+      left
+      assumption
+    case right =>
+      left
+      assumption
+  case inr =>
+    rcases hqr with ⟨hq, hr⟩
+    case intro =>
+      constructor
+      case left =>
+        right
+        assumption
+      case right =>
+        right
+        assumption
+
+
+
+
 
 theorem distr_disj_conj_converse :
     (P ∨ Q) ∧ (P ∨ R) → P ∨ (Q ∧ R)  := by
-  sorry
-
+  intro h
+  rcases h with ⟨hl, hr⟩
+  rcases hl with (hp | hq)
+  case intro.inl =>
+    left
+    assumption
+  case intro.inr =>
+    rcases hr with (hp | hr)
+    case inl =>
+      left
+      assumption
+    case inr =>
+      right
+      constructor
+      case h.left =>
+        assumption
+      case h.right =>
+        assumption
 
 ------------------------------------------------
 -- Currying
@@ -324,11 +454,30 @@ theorem distr_disj_conj_converse :
 
 theorem curry_prop :
     ((P ∧ Q) → R) → (P → (Q → R))  := by
-  sorry
+  intro h
+  intro hp
+  intro hq
+  have hpq : P ∧ Q := by
+    constructor
+    case left =>
+      assumption
+    case right =>
+      assumption
+  apply h
+  assumption
 
 theorem uncurry_prop :
     (P → (Q → R)) → ((P ∧ Q) → R)  := by
-  sorry
+  intro h
+  intro hpq
+  rcases hpq with ⟨hp, hq⟩
+  case intro =>
+  apply h
+  case a =>
+    assumption
+  case a =>
+    assumption
+
 
 
 ------------------------------------------------
@@ -337,7 +486,8 @@ theorem uncurry_prop :
 
 theorem impl_refl :
     P → P  := by
-  sorry
+  intro hp
+  assumption
 
 
 ------------------------------------------------
@@ -392,7 +542,19 @@ theorem disj_idem :
 
 theorem conj_idem :
     (P ∧ P) ↔ P := by
-  sorry
+  constructor
+  case mp =>
+    intro hpp
+    rcases hpp with ⟨hp1, hp2⟩
+    case intro =>
+      assumption
+  case mpr =>
+    intro hp
+    constructor
+    case left =>
+      assumption
+    case right =>
+      assumption
 
 
 ------------------------------------------------
@@ -407,6 +569,7 @@ theorem false_bottom :
 theorem true_top :
     P → True  := by
   intro hp
+  trivial
 
 end propositional
 
