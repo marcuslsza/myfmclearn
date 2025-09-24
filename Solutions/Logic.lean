@@ -587,15 +587,37 @@ variable (P Q : U → Prop)
 
 theorem demorgan_exists :
     ¬ (∃ x, P x) → (∀ x, ¬ P x)  := by
-  sorry
+  intro hnEx
+  intro x
+  intro hpx
+  have hEx : ∃ x, P x := by
+    exists x
+  contradiction
+  
 
 theorem demorgan_exists_converse :
     (∀ x, ¬ P x) → ¬ (∃ x, P x)  := by
-  sorry
+  intro hx
+  intro hexx
+  obtain ⟨x,hpx⟩ := hexx
+  have hnpx := hx x --Ganha ¬P x ao aplicar hx: [∀ (x : U), ¬P x] em x: U.
+  contradiction
+
+    
+
+
 
 theorem demorgan_forall :
     ¬ (∀ x, P x) → (∃ x, ¬ P x)  := by
-  sorry
+  intro nhx
+  apply Classical.byContradiction
+  intro hnex
+  have hx : ∀ (x : U), P x := by
+    intro x
+     
+  
+
+
 
 theorem demorgan_forall_converse :
     (∃ x, ¬ P x) → ¬ (∀ x, P x)  := by
